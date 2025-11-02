@@ -27,8 +27,8 @@ export async function loadModule(module) {
             $('#spinner').removeClass('show');
             updateUserInfo(data);
             createMenu(data.modules, module, data);
-            
-            const moduleScript = await import(`./modules/${translateToEnglish(module)}.js`);
+            const cacheBust = Date.now();
+            const moduleScript = await import(`./modules/${translateToEnglish(module)}.js?m=${cacheBust}`);
             moduleScript.initModule(data, module);
         } catch (error) {
             if (error.message.includes('401')) {

@@ -10,9 +10,12 @@ class PatientController extends Controllers {
 
     public function show() {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if (!$this->authMiddleware->validateToken()) return;
+            if (!$this->authMiddleware->validateToken()) {
+                http_response_code(401);
+                $this->jsonResponse([]);
+            }
             $patients = $this->model->getPatients();
-        
+            $response = [];
             if ($patients) {
                 foreach ($patients as $patient){
                     $response[] = [
@@ -27,9 +30,8 @@ class PatientController extends Controllers {
                         'active' => $patient->active
                     ];
                 }
-
-                $this->jsonResponse($response);
             }
+            $this->jsonResponse($response);
         }
     }
 

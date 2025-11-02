@@ -33,8 +33,8 @@ const fetchModuleContent = async (module) => {
 const updateModuleInfo = async (item, data) => {
     const moduleTitle = document.getElementById('moduleTitle');
     const moduleIcon = document.getElementById('moduleIcon');
-    const moduleScript = await import(`../modules/${translateToEnglish(item.link)}.js`);
-
+    const cacheBust = Date.now();
+    const moduleScript = await import(`../modules/${translateToEnglish(item.link)}.js?m=${cacheBust}`);
     moduleTitle.textContent = item.module;
     moduleIcon.className = `${item.icon} me-2 fa-2x text-dark`;
     updateUserInfo(data);
