@@ -5,6 +5,7 @@ export function translateToEnglish (spanishModule){
         'rol': 'role',
         'paciente': 'patient',
         'diagnostico': 'diagnosis',
+        'diagnosticos': 'diagnosticos',
         'habitacion': 'room',
         'empleado': 'employee',
         'posicion': 'position',

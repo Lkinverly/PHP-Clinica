@@ -16,15 +16,30 @@ export async function initModule(data, module) {
     currentData = data;
     currentModule = module;
     const url = `${urlBase}/${currentModule}/mostrar`;
-    const response = await apiService.fetchData(url, 'GET');
+    let response = [];
+    try {
+        response = await apiService.fetchData(url, 'GET');
+    } catch (error) {
+        if ((error.message || '').includes('401')) {
+            localStorage.setItem('tokenExpired', 'true');
+            window.location.href = urlBase;
+            return;
+        }
+        showAlert('Error de conexión.', 'danger');
+        console.error('patient list error:', error);
+        return;
+    }
+    if (!Array.isArray(response)) {
+        try { console.debug('[patient] non-array response', response); } catch (_) {}
+        response = [];
+    }
     const tableBody = document.getElementById('tableBody');
     const tableHead = document.getElementById('tableHead');
     const addButton = document.getElementById('addButton');
-    const moduleData = currentData.modules.find(moduleData => moduleData.link === currentModule);
-
-    const canCreate = moduleData.create_operation === 1;
-    const canUpdate = moduleData.update_operation === 1;
-    const canDelete = moduleData.delete_operation === 1;
+    const moduleData = currentData.modules.find(moduleData => moduleData.link === currentModule) || {};
+    const canCreate = Number(moduleData.create_operation) === 1;
+    const canUpdate = Number(moduleData.update_operation) === 1;
+    const canDelete = Number(moduleData.delete_operation) === 1;
     const hasActions = canUpdate || canDelete;
     let rows = '';
 
@@ -107,12 +122,13 @@ const populateSelect = async (selectId, module) =>  {
     newSelectElement.innerHTML = '';
 
     try {
-        const options = await apiService.fetchData(`${urlBase}/${module}/mostrar`, 'GET');
+        let options = await apiService.fetchData(`${urlBase}/${module}/mostrar`, 'GET');
+        if (!Array.isArray(options)) options = [];
         const defaultOption = new Option('Sin Asignar', '');
         newSelectElement.appendChild(defaultOption);
 
         options.forEach(item => {
-            if (item.active === 1) {
+            if (Number(item.active) === 1) {
                 const option = document.createElement('option');
                 option.value = item.id;
                 option.textContent = item.name;

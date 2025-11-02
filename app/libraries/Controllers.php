@@ -36,7 +36,13 @@ class Controllers{
 
      // Respuesta en formato JSON
      protected function jsonResponse($data) {
-        header('Content-Type: application/json');
+        // Limpiar cualquier salida previa para asegurar cabeceras correctas
+        if (ob_get_length()) {
+            while (ob_get_level() > 0) { ob_end_clean(); }
+        }
+        if (!headers_sent()) {
+            header('Content-Type: application/json; charset=utf-8');
+        }
         echo json_encode($data);
         exit;
     }
