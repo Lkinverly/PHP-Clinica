@@ -22,6 +22,7 @@ const ROUTE_MAP = [
     "examen" => "ExamController",
     "pacienteexamen" => "PatientExamController",
     "habitaciondisponible" => "RoomAvailableController",
+    "historialhabitacion"  => "RoomHistoryController",
 ];
 
 //Rutas de métodos de español a inglés

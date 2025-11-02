@@ -15,6 +15,7 @@ export function translateToEnglish (spanishModule){
         'venta': 'sale',
         'examen': 'exam',
         'habitaciondisponible': 'roomAvailable',
+        'historialhabitacion': 'roomHistory'
     };
 
     return module[spanishModule] || spanishModule;
